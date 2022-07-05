@@ -1,0 +1,23 @@
+langauge: generic
+sudo: required
+services: 
+  - docker
+
+before_install:
+  - docker build -t agneslai/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true agneslai/react-test npm run test
+
+after_success:
+  - docker build -t agneslai/multi-client ./client
+  - docker build -t agneslai/multi-nginx ./nginx
+  - docker build -t agneslai/multi-server ./server
+  - docker build -t agneslai/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --pasword-stdin
+  # Take the above images and push them to Docker Hub
+  - docker push agneslai/multi-client
+  - docker push agneslai/multi-nginx
+  - docker push agneslai/multi-server
+  - docker push agneslai/multi-worker

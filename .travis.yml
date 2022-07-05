@@ -15,7 +15,7 @@ after_success:
   - docker build -t agneslai/multi-server ./server
   - docker build -t agneslai/multi-worker ./worker
   # Log in to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --pasword-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin docker.io
   # Take the above images and push them to Docker Hub
   - docker push agneslai/multi-client
   - docker push agneslai/multi-nginx
